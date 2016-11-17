@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html ng-app="scrumApp">
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.css">
+	<title>
+		Sprint Info
+	</title>
+</head>
+<body>
+	<div class="container" ng-controller="ScrumAppCtrl">
+		<nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div>
+              <ul class="nav navbar-nav">
+                <li><a><h4>Scrum Model</h4></a></li>
+                <li><a href="/story"><h4>User Stories</h4></a></li>
+                <li><a href="/sprint"><h4>Sprint</h4></a></li>
+                <li class="right" style="position:absolute;right:120px;" data-toggle="modal" data-target="#status"><a href="#" ><h4>Project Status</h4></a></li>
+                <li class="right" style="position:absolute;right:20px;"><a href="/logout"><h4>Sign Out</h4></a></li>
+              </ul>
+          </div>
+        </div>
+    </nav>
+
+        <div class="modal fade" id="status" tabindex="-1" role="dialog" aria-labelledby="lstatus" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="lstatus">Project Status</h4>
+              </div>
+              <div class="modal-body">
+                <label>Expected Points:&nbsp;&nbsp; {{expectedPoints}}</label></br>
+                <label>Actual Points:&nbsp;&nbsp; {{actualPoints}}</label></br>
+                <label>Projected Completion Date&nbsp;(dd/mm/yyyy):&nbsp;</label><h5 style="color:blue">{{completionDate}}</h5>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <p data-placement="top" title="Add Sprint"><button data-target="#createSprint" data-toggle="modal" class = "btn btn-info pull-right"><span class="glyphicon glyphicon-plus" ></span> Add Sprint</button></p>
+
+      <h4>Select a Sprint and click on 'Go' button to display Stories assigned to it. </h4>
+      <nav class="navbar">
+        <div class="container-fluid">
+          <div>
+              <ul class="nav navbar-nav">
+                <li><label><h5>Select Sprint: &nbsp;&nbsp;</h5></label></li><li><select ng-change = "hideSprintTable()" ng-model = "sprint.sprintId" data-placement = "top" class="selectpicker form-control" data-style="btn-success">
+                  <option ng-repeat = "sprint in sprintIdList">{{sprint.sprintId}}</option></select>
+                </li><li>&nbsp;&nbsp;</li>
+                <li><button class = "btn btn-info form-control" ng-disabled= "!(sprint.sprintId)" ng-click = "getSprintStories(sprint.sprintId)"><span class="glyphicon glyphicon-search"></span>
+                    Go </button>
+                </li><li>&nbsp;&nbsp;</li>
+                <li ng-model = "showMarkBtn" ng-show ="(showMarkBtn == 1)"><button class = "btn btn-info" ng-click = "markSprintComplete(sprint.sprintId)"><span class="glyphicon glyphicon-ok" ></span>  Mark Sprint Complete</button></li>
+                <li ng-show = "markCompletedSuccessMessage.length>0"></br><label style="color:blue" >&nbsp;{{markCompletedSuccessMessage}}&nbsp;When you mark a sprint as complete, all of its stories are also marked as complete.</label></li>
+              </ul>
+          </div>
+        </div>
+      </nav>
+
+
+    <div class="modal fade" id="createSprint" tabindex="-1" role="dialog" aria-labelledby="lstatus" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="lstatus">Enter Sprint details</h4>
+            </div>
+            <div class="modal-body">
+              <form name="sprintForm">
+                <p>Create a new sprint using the fields below. Newly created sprints appear on the Sprint dropdown list. Please note that we use a standard velocity of 3 per person per day</br></p>
+                <label>Enter the duration of sprint in working days*</label><div role="alert">
+                <input name = "days" type = "number" placeholder = 1 ng-model = "sprint.days" min=1 required><span style="color:red" class="error" ng-show="sprintForm.days.$error.required">
+                  Required field*</span>
+                </div></br>
+                <label>Enter the team size*</label></br>
+                <input type = "number" name="size" placeholder = 1 ng-model="sprint.teamSize" min=1 required><div role="alert">
+                  <span style="color:red" class="error" ng-show="sprintForm.size.$error.required">
+                  Required field*</span></div></br>
+                <label>Expected team velocity of this sprint:&nbsp;&nbsp; {{sprint.days * 3 * sprint.teamSize}}</label>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" ng-click = "" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign"></span>
+              </button>
+              <button type="button" ng-disabled = "!sprintForm.days.$valid || !sprintForm.size.$valid" class="btn btn-primary" ng-click = "addSprint()" data-dismiss="modal"><span class="glyphicon glyphicon-ok-circle"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+		<div class = "container" ng-model = "showTable" ng-show="(sprintStoryList.length > 0 && showTable == 1)" >
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>User Story</th>
+					<th>Acceptance Criteria</th>
+					<th>Comments</th>
+					<th>Points</th>
+					<th>Cost</th>
+					<th>Days</th>
+					<th>Sprint</th>					
+					<th>Status</th>
+				</tr>
+			</thead>	
+			<tbody>			
+				<tr ng-repeat = "userStory in sprintStoryList">
+          <td>{{userStory.userStory}}</td>
+          <td>{{userStory.acceptanceCriteria}}</td>
+          <td>{{userStory.comments}}</td>
+          <td>{{userStory.points}}</td>
+          <td>${{userStory.points * 30}}</td>
+          <td>{{userStory.points/3 | number:2}}</td>
+          <td>{{userStory.sprintId}}</td>
+          <td><span>{{userStory.userStoryStatus == 2 ? 'Assigned & Completed' : 'Assigned'}}</span></td>
+				</tr>
+			</tbody>
+		</table>
+    </div>
+    <div ng-model = "showWarning" ng-show="(sprintStoryList.length <= 0 && showWarning == 1)"><h5><span class = "glyphicon glyphicon-thumbs-down" style ="color:red;font-family:helvetica">&nbsp;There are no user stories assigned to this Sprint. Navigate to 'User Stories' tab to assign stories to this sprint.</span></h5></div>
+	</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="javascripts/controller.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+.site-footer{
+	background-color: #f1efef;
+	margin-top: 30px;
+	padding-top: 30px;
+}
+
+.bottom-footer{
+	margin-top: 50px;
+	padding-top: 10px;
+	margin-bottom: 80px;
+}
+.btn{
+	background-color: #E6E6E6;
+	margin-top: 25px;
+}
+
+.footer-nav li{
+	display: inline;
+}
+
+.footer-nav{
+	text-align: center;
+}
+.footer-nav li:not(:first-child):before
+{	
+ content: '|';
+ padding: 0px 10px;
+}
+
+.btnnn{
+	background-color: #FBDB65;
+	margin-top: 20px;
+	width: 350px;
+	height: 40px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+}
+
+.form-inline{
+	text-align: center;;
+}
+
+.btnnn:hover{
+	background-color: #F7D358;
+}
+
+.btnnn:active{
+	background-color: #F7D358;
+}
+
+.btn:hover
+{
+background-color: #A4A4A4;
+}
+.page-title{
+	margin-bottom: 60px;
+	color: black;
+}
+
+.form-control{
+	margin-top: 25px;
+	width:350px;
+}
+
+.navbar-default{
+	height: 100px;
+}
+
+
+.imagerow{
+padding-top:110px;
+}
+
+.select_style 
+{
+  background: #FFF;
+  overflow: hidden;
+  display: inline-block;
+  color: #525252;
+  font-weight: 300;
+  -webkit-border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  -moz-border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  -webkit-box-shadow: 0 0 5px rgba(123, 123, 123, 0.2);
+  -moz-box-shadow: 0 0 5px rgba(123,123,123,.2);
+  box-shadow: 0 0 5px rgba(123, 123, 123, 0.2);
+  border: solid 1px #DADADA;
+  font-family: "helvetica neue",arial;
+  position: relative;
+  cursor: pointer;
+  padding-bottom:5px;
+
+}
+
+.select_style select
+{
+  -webkit-appearance: none;
+  appearance:none;
+  width:180px;
+  height: 25px;
+  background:none;
+  background:transparent;
+  border:none;
+  outline:none;
+  cursor:pointer;
+  padding:3px 10px;
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Multi_Tenant_App</title>
+		<link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="stylesheets/styleSignup.css">
+	</head>
+	<body>
+	<div ng-app="signup" ng-controller="signupCtrl">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-5">
+						<h3 style="padding-top:10px;"><strong>Multitenant Software Technologies</strong></h3>
+					</div>
+					<div class="col-md-7">
+						<div class="navbar-header">
+							<form class="form-inline" name="loginForm">
+								<div class="form-group">
+									<input type="email" class="form-control" ng-model="InputEmail" id="InputEmail" placeholder="Email address" required >
+								</div>
+								<div class="form-group">
+									<input type="password" class="form-control" ng-model="InputPassword" id="InputPassword" placeholder="Password" required>
+								</div>
+								<div class="form-group">
+									<div style="padding-top:30px;">
+										<div  class="select_style">
+											<select ng-model="logintech.selected" required data-fv-notempty-message="Please select an item in the list">
+												<option ng-repeat="tech in techs" value="{{ tech.technologyId }}">{{ tech.technologyName }}</option>
+												<option value="" selected>---Select Technology---</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<button type="submit" ng-click="login()" ng-disabled="loginForm.$invalid" class="btn btn-default">Sign in</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="container">
+			<div class="row">
+			    <div class="imagerow">
+					<div class="col-md-6">
+						<img src="images/collage.png" style="width:500px;">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h3 style="color:black;"><strong>Get Started - it's free.</strong></h3>
+					<h5 style="margin-bottom:10px;">Registration takes less than 2 minutes</h5>
+					<form name="signupForm">
+						<input type="text" class="form-control" id="InputFirstName" placeholder="First Name" name="InputFirstName" ng-model="InputFirstName" required >
+						<input type="text" class="form-control" id="InputLastName" placeholder="Last Name" name="InputLastName" ng-model="InputLastName" required>
+						<input type="email" class="form-control" id="InputEmail" placeholder="Email address" name="InputEmail" ng-model="InputEmail" required >
+						<input type="password" class="form-control" id="InputPassword" placeholder="Password (6 to 20 character with one uppercase, special character and number)" name="InputPassword" ng-model="InputPassword" ng-minlength="6" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/"required>
+						<br>
+						<div  class="select_style">
+							<select ng-model="tech.selected" required data-fv-notempty-message="Please select an item in the list">
+								<option ng-repeat="tech in techs" value="{{ tech.technologyId }}">{{ tech.technologyName }}</option>
+								<option value="" selected >---  Select Technology  ---</option>
+							</select>
+						</div>
+						<div class="button_type">
+							<button type="submit" class="btnnn btn-default" ng-disabled="signupForm.$invalid" ng-click="signUp()"><strong>Register Now</strong></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<br><br><br><br><br><br>
+		<footer class="site-footer">
+			<div class="container">
+				<div class="row">
+				</div>
+				<div class="bottom-footer">
+				</div>
+			</div>
+		</footer>
+	</div>
+	<script type="text/javascript" src="javascripts/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/bootstrap-hover-dropdown.min.js"></script>
+	<script type="text/javascript" src="angular/angular.min.js"></script>
+	<script>
+	  var app = angular.module('signup', []);
+      app.controller('signupCtrl', function($http,$scope) {
+      		$scope.techs = {};
+      		//$scope.techs=[ { technologyId: 1, technologyName: 'Waterfall' },{ technologyId: 2, technologyName: 'Scrum' },{ technologyId: 3, technologyName: 'Kanban' } ]
+			$http.get("/getTechnology")
+			.success(function(response){
+				$scope.techs = response.data;
+			}).error(function(error){
+				alert(error);
+			});
+			
+	    	$scope.signUp = function() {
+				//alert('here');
+				//alert($scope.InputEmail);
+				$http({
+					method: 'POST',
+					url: '/aftersignup',
+					data:{ 
+							"firstname": $scope.InputFirstName,
+							"lastname": $scope.InputLastName,
+							"username": $scope.InputEmail, 
+							"password": $scope.InputPassword,
+							"type": $scope.tech.selected
+						}  
+				}).success(function(response){
+					//alert(JSON.stringify(response));
+					if(response.signup == "Waterfall"){
+					//alert('hi');
+						window.location = '/Waterfall';
+					}
+					else if(response.signup == "Scrum"){
+						window.location = '/story';
+					}
+					else if(response.signup == "Kanban"){
+						alert('hi');
+						window.location = '/kanban';
+					}
+					else{
+						alert("You have an account already!!!!");
+						window.location = '/signup';
+					}
+				}).error(function(error){
+						alert(error);
+					});
+				};
+				
+			$scope.login = function() {
+				$http({
+					method: 'POST',
+					url: '/afterlogin',
+					data:{ 
+						"username": $scope.InputEmail, 
+						"password": $scope.InputPassword,
+						"type": $scope.logintech.selected
+					}  
+					}).success(function(response){
+						//alert(JSON.stringify(response));
+					if(response.login == "Waterfall"){
+					//alert('hi');
+						window.location = '/Waterfall';
+					}
+					else if(response.login == "Scrum"){
+						window.location = '/story';
+					}
+					else if(response.login == "Kanban"){
+							//alert('hi');
+						window.location = '/kanban';
+					}
+					else{
+						alert("Error occured !!! Please try again....");
+						window.location = '/signup';
+					}
+					}).error(function(error){
+						alert(error);
+					});
+				};
+      	});
+	</script>
+	</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html class="fullpage">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multitenant</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/kanban.css">
+  </head>
+  <body>
+    <div ng-app="rsc" ng-controller="rscCtrl">
+     <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="container">
+            <div class="navbar-header">
+            
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-LI-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-LI-navbar-collapse-1">
+              <div class="col-md-6">
+                <h1 style="color:white;padding-left:15px;">Kanban</h1>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-right">
+                  <li><a href="/logout"><h4>Sign Out</h4></a></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-left">
+                  <li data-toggle="modal" data-target="#project"><a href="#"><h4>{{projectname}}</h4></a>
+                  </li>
+                 <li><a href="/kanban"><h4>Cards</h4></a>
+                  </li>
+                  <li><a href="/kanbanrsc"><h4>Resource</h4></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-right">
+                  <li data-toggle="modal" data-target="#status"><a href="" ng-click="cardStatus()" ><h4>Project Status</h4></a>
+                  <li><a href="" ng-click="saveProject()" ><h4>Save Project</h4></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div style="padding-left:350px;">
+    <div class="container-fluid">
+        <div id="sortableKanbanBoards" class="row">
+            <!--sütun başlangıç-->
+            <div class="panel panel-primary kanban-col">
+                <div class="panel-heading">
+                    TODO
+                    <i class="fa fa-2x fa-plus-circle pull-right"></i>
+                </div>
+                <div class="panel-body">
+                    <div id="TODO" class="kanban-centered">
+
+                      <div ng-repeat="card in cards">
+                        <article class="kanban-entry grab" id="item11" draggable="true">
+                            
+                            <div class="kanban-entry-inner">
+                            
+                                <div class="kanban-label">
+                                   {{card.cardDescription}}
+                                </div>
+                            
+                            </div>
+                        </article>
+
+                         </div>
+
+                      <article class="kanban-entry grab" id="item1" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban1}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item2" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban2}}</label>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="kanban-entry grab" id="item3" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban3}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item4" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban4}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item5" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban5}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item6" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban6}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item7" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban7}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item8" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban8}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item9" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban9}}</label>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="kanban-entry grab" id="item10" draggable="true">
+                            <div class="kanban-entry-inner">
+                                <div class="kanban-label">
+                                <label>{{Kanban10}}</label>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                        
+                         
+                </div>
+                <div class="panel-footer">
+                <li data-toggle="modal" data-target="#addCard"><a href="#" ><h5>Add Card</h5></a></li>
+                </div>
+            </div>
+            
+        <div class="modal fade" id="status" tabindex="-1" role="dialog" aria-labelledby="lstatus" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="lstatus">Project Status</h4>
+          </div>
+          <div class="modal-body">
+              <div>
+              <label>total no of cards present in boards are :-</label>
+              </div>
+              <div>
+            <label>{{cardNumber}}</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+            
+        <!-- card details popup -->    
+        <div class="modal fade" id="addCard" tabindex="-1" role="dialog" aria-labelledby="lstatus" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="lstatus">Card</h4>
+              </div>
+        <div class="modal-body">
+              <label>Card Description</label>
+        <textarea rows="3" class="form-control" name="cardDescription" ng-model="cardDescription" placeholder="Enter the card description"/></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="postCard()" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-default" ng-click="clearProject()" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+            <!--sütun bitiş-->
+            <!--sütun başlangıç-->
+            <div class="panel panel-primary kanban-col">
+                <div class="panel-heading">
+                    DOING
+                    <i class="fa fa-2x fa-plus-circle pull-right"></i>
+                </div>
+                <div class="panel-body">
+                    <div id="DOING" class="kanban-centered">
+                    </div>
+                </div>
+            </div>
+            <!--sütun bitiş-->
+            <!--sütun başlangıç-->
+            <div class="panel panel-primary kanban-col">
+                <div class="panel-heading">
+                    DONE
+                    <i class="fa fa-2x fa-plus-circle pull-right"></i>
+                </div>
+                <div class="panel-body">
+                    <div id="DONE" class="kanban-centered">
+                    </div>
+                </div>            </div>
+            <!--sütun bitiş-->
+
+
+        </div>
+    </div>
+
+ <div class="modal fade" id="project" tabindex="-1" role="dialog" aria-labelledby="lprojectname" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="lprojectname">Project Properties</h4>
+          </div>
+          <div class="modal-body">
+            <label>Project Name</label>
+            <br>
+            <input type="text" name='projectname' ng-model="projectname" class="form-control"/>
+            <br>
+            <label>Start Date</label>
+            <input type="date" class="form-control" name="projectStart" ng-model="startDateProject"  placeholder="Enter the Start Date of Project" required/>
+            <br>
+            <label>Finish Date</label>
+           <input type="date" class="form-control" name="projectEnd" ng-model="endDateProject"  placeholder="Enter the Start Date of Project" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" ng-click="updateproject()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-default" ng-click="clearProject()" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Static Modal -->
+    <div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fa fa-refresh fa-5x fa-spin"></i>
+                        <h4>Processing...</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+     <script type="text/javascript" src="javascripts/jquery-1.11.2.min.js"></script>
+  <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+    <!--<script src="angular/angular.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+            $(function () {
+            var kanbanCol = $('.panel-body');
+            kanbanCol.css('max-height', (window.innerHeight - 150) + 'px');
+
+            var kanbanColCount = parseInt(kanbanCol.length);
+            $('.container-fluid').css('min-width', (kanbanColCount * 350) + 'px');
+
+            draggableInit();
+
+            $('.panel-heading').click(function() {
+                var $panelBody = $(this).parent().children('.panel-body');
+                $panelBody.slideToggle();
+            });
+        });
+                            
+        function draggableInit() {
+            var sourceId;
+
+            $('[draggable=true]').bind('dragstart', function (event) {
+                sourceId = $(this).parent().attr('id');
+                event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+            });
+
+            $('.panel-body').bind('dragover', function (event) {
+                event.preventDefault();
+            });
+
+            $('.panel-body').bind('drop', function (event) {
+                var children = $(this).children();
+                var targetId = children.attr('id');
+
+                if (sourceId != targetId) {
+                    var elementId = event.originalEvent.dataTransfer.getData("text/plain");
+
+                    $('#processing-modal').modal('toggle'); //before post
+
+
+                    // Post data 
+                    setTimeout(function () {
+                        var element = document.getElementById(elementId);
+                        children.prepend(element);
+                        $('#processing-modal').modal('toggle'); // after post
+                    }, 1000);
+
+                }
+
+                event.preventDefault();
+            });
+        }
+
+</script>
+
+<script>
+    angular.module('rsc', []).controller('rscCtrl', function($scope,$http) {
+        $scope.projectname = "Untitled";
+        var tenantid;
+        var id=3;
+        var cardNo;
+      
+        $scope.saveProject = function() {
+        if($scope.projectname == "Untitled"){
+          alert('Project name cannot be untitled');
+        }
+        else{
+          alert('Project Saved Successfully!!!');
+        }
+      };
+      
+      
+      
+      var refresh = function(){
+        $http.get("/previousCardAdd")
+        .success(function(response){
+            $scope.cards = response.doc;
+        $scope.tenantid = response.tenantid;
+                }).error(function(error){
+          alert(error);
+        });
+      };
+      
+      var cardNo;
+      
+      
+//      for (var k=1; k<=cardNo; cardNo--) {
+//          refresh();
+//      }
+      
+      var maxCard = function(){
+          $http.get("/fetchCardNo")
+        .success(function(response){
+            console.log(response);
+            cardNo=response;
+            $scope.cardNumber=cardNo;
+            
+            //            $scope.cards = response.doc;
+//        $scope.tenantid = response.tenantid;
+                }).error(function(error){
+          alert(error);
+        });
+      };
+      
+     maxCard();
+     refresh();
+     
+     function cardStatus() {
+         
+         $scope.cardNumber=cardNo;
+     }
+//     refresh();
+  
+//         var refresh = function() {
+//     $http.get('/previousCardAdd').success(function(response) {
+//        console.log("I got the data I requested");
+//        $scope.previousCardAdd = response;
+//        $scope.newCard = "";
+//      });
+//    };
+//    
+//    refresh();
+//     var j;
+//      if (cardNo != 0){
+//          j =cardNo;
+//      }
+//      else {
+//          j = 0;
+//      }
+//      
+//      for (var k=0; k<=j; j--) {
+//          refresh();
+//      }
+//      }
+        var cardValue=0;
+        $scope.postCard = function() {
+            cardValue++;
+          $scope.cardNumber=$scope.cardNumber+1;
+            //alert($scope.cardNumber);
+            console.log($scope.cardDescription);
+            $http({
+          method: 'POST',
+          url: '/cardDetails',
+             data:{ 
+                "projectid": id,
+                        "tenantid": $scope.tenantid,
+              "cardDescription": $scope.cardDescription,
+              "cardNo": $scope.cardNumber
+            }   
+        })
+        .success(function(response){
+
+            console.log(response.body);
+            //alert(cardValue);
+//            refresh();
+            if (cardValue==1) {
+                        $.each(response, function() {  
+               $scope.Kanban1=this.cardDescription;
+                                                    }); }
+            else if (cardValue==2) {
+                               $.each(response, function() {  
+               $scope.Kanban2=this.cardDescription;
+                                       }); }
+            else if (cardValue==3) {
+                               $.each(response, function() {  
+               $scope.Kanban3=this.cardDescription;
+                                       }); }
+            else if (cardValue==4) {
+                               $.each(response, function() {  
+               $scope.Kanban4=this.cardDescription;
+                                       }); }
+            else if (cardValue==5) {
+                               $.each(response, function() {  
+               $scope.Kanban5=this.cardDescription;
+                                       }); }
+            else if (cardValue==6) {
+                                $.each(response, function() {  
+               $scope.Kanban6=this.cardDescription;
+                                       }); }
+            else if (cardValue==7) {
+                                $.each(response, function() {  
+               $scope.Kanban7=this.cardDescription;
+                                       }); }
+            else if (cardValue==8) {
+                                $.each(response, function() {  
+               $scope.Kanban8=this.cardDescription;
+                                      }); }
+            else if (cardValue==9) {
+                                $.each(response, function() {  
+               $scope.Kanban9=this.cardDescription;
+                                       }); }
+           else if (cardValue==10) {
+                                $.each(response, function() {  
+               $scope.Kanban10=this.cardDescription;
+                                       }); }
+            else {
+                alert("reached the limit of new cards");
+            }
+         $('#addCard').modal('hide');
+          $scope.cardDescription = "";
+          }).error(function(error){
+          alert(error);
+        }); 
+      };
+
+                $scope.cancel = function(){ 
+          $scope.cardDescription='';
+      };
+         
+          $scope.clearProject = function(){
+            $http.get("/getProjectDetails")
+            .success(function(response){
+            $scope.projectname =response[0].projectname;
+           $scope.startDateProject= new Date(response[0].projectstart);
+          if (response[0].projectend == null){
+                        $scope.endDateProject=response[0].projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response[0].projectend);}
+            }).error(function(error){
+              alert(error);
+        });
+       };
+       
+       var saveProjectdetail = function(){
+         $scope.projectname = "Untitled";
+         $scope.startDateProject = new Date();
+         $scope.endDateProject = "";
+                $http({
+                method: 'POST',
+                url: '/saveProject',
+                data:{
+                  "projectid": id,
+                  "tenantid":$scope.tenantid,
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     //$('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+      };
+      
+       var getProjectDetails = function(){
+        $http.get("/getProjectDetails")
+        .success(function(response){
+          if(response.length > 0){
+           if(response[0].projectid == 3){
+               $scope.projectname =response[0].projectname;
+            $scope.startDateProject=new Date( response[0].projectstart);
+            if (response[0].projectend == null){
+                        $scope.endDateProject=response[0].projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response[0].projectend);}
+           }
+           else{
+              saveProjectdetail();
+           }
+          }
+          else{
+            saveProjectdetail();
+          }
+        }).error(function(error){
+          alert(error);
+        });
+      };
+      
+      getProjectDetails(); 
+      
+      var updateProjectDetails = function(){
+         $scope.projectname = "Untitled";
+         $scope.startDateProject = new Date();
+         $scope.endDateProject = "";
+                $http({
+                method: 'POST',
+                 url: '/updateProjectDetails/' +$scope.tenantid,
+                data:{
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     //$('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+      };
+      
+      $scope.updateproject  = function(){
+         var start=new Date ($scope.startDateProject);
+        var end=new Date ($scope.endDateProject);
+         var today = new Date();
+        if (start - today < 0){
+          alert('Start date should be future date');
+        }
+        else if (start - end > 0){
+          alert('Finish date cannot be less than start date');
+        }
+        else{
+        $http({
+                method: 'POST',
+                url: '/updateProjectDetails/' +$scope.tenantid,
+                data:{
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     $('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+        }
+      };
+          
+      });
+  </script>
+
+</body>
+</html>

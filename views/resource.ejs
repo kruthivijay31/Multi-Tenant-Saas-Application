@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multitenant</title>
+     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
+  </head>
+  <body>
+  <div ng-app="rsc" ng-controller="rscCtrl">
+    <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-LI-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-LI-navbar-collapse-1">
+            <div class="col-md-6">
+                <h1 style="color:white;padding-left:25px;">Waterfall Model</h1>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-right">
+                  <li><a href="/logout"><h4>Sign Out</h4></a></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-left">
+                  <li data-toggle="modal" data-target="#project"><a href="#"><h4>{{projectname}}</h4></a>
+                  </li>
+                  <li><a href="/waterfall"><h4>Tasks</h4></a>
+                  </li>
+                  <li><a href="/resource"><h4>Resource</h4></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav navbar-nav header-nav pull-right">
+                  <li data-toggle="modal" data-target="#status"><a href="" ng-click="getStatus()"><h4>Project Status</h4></a>
+                  <li><a href="" ng-click="saveProject()" ><h4>Save Project</h4></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h3 ng-show="edit">Add Resource:</h3>
+      <h3 ng-hide="edit">Edit Resource:</h3>
+      <br><br>
+      <form name="frm_details"> 
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td>
+              <input type="text" class="form-control" ng-model="resource.name" name="InputName" id="InputName" placeholder="Resource Name" required>
+            </td>
+            <td>
+              <input type="email" class="form-control" ng-model="resource.email" name="InputEmail" id="InputEmail" placeholder="Email Address" required>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-success" ng-click="addRow()" ng-disabled="frm_details.$invalid">
+                <span class="glyphicon glyphicon-save"></span> Save
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-success" ng-click="cancel()">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+              </button>
+            </td>
+            
+             <td>
+               <div ng-show = "updateshow">
+                <button class="btn btn-success" ng-click="update()">
+                  <span class="glyphicon glyphicon-upload"></span> Update
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr ng-repeat="user in users">
+            <td>{{$index + 1}}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <button class="btn btn-primary" ng-click="editUser(user._id)">
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;Edit
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-primary" ng-click="removeRsc(user._id)">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </form>
+      <br><br>
+    </div>
+
+    <div class="modal fade" id="project" tabindex="-1" role="dialog" aria-labelledby="lprojectname" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="lprojectname">Project Properties</h4>
+          </div>
+          <div class="modal-body">
+            <label>Project Name</label>
+            <br>
+            <input type="text" name='projectname' ng-model="projectname" class="form-control"/>
+            <br>
+            <label>Start Date</label>
+            <input type="date" class="form-control" name="projectStart" ng-model="startDateProject"  placeholder="Enter the Start Date of Project" required/>
+            <br>
+            <label>Finish Date</label>
+           <input type="date" class="form-control" name="projectEnd" ng-model="endDateProject"  placeholder="Enter the End Date of Project" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" ng-click="updateproject()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-default" ng-click="clearProject()" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="status" tabindex="-1" role="dialog" aria-labelledby="lstatus" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="lstatus">Project Status</h4>
+          </div>
+          <div class="modal-body">
+            <label>{{percentage}}</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <script type="text/javascript" src="javascripts/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascripts/bootstrap-hover-dropdown.min.js"></script>
+    <script type="text/javascript" src="angular/angular.min.js"></script>
+  <script>
+    angular.module('rsc', []).controller('rscCtrl', function($scope,$http) {
+      $scope.projectname = "Untitled";
+      $scope.edit = true;
+      $scope.resource={};
+      $scope.resources=[];
+      $scope.updateshow = false;
+      var tenantid;
+      var id=1;
+      
+      var refresh = function(){
+        $http.get("/getResourceList")
+        .success(function(response){
+  			$scope.users = response.doc;
+  			$scope.tenantid = response.tenantid;
+  			 $scope.edit = true;
+         $scope.updateshow = false;
+  			}).error(function(error){
+  				alert(error);
+  			});
+      };
+      
+      refresh();
+
+      $scope.editUser = function(id) {
+        $scope.edit = false;
+        $scope.updateshow = true;
+        $http.get('/editrsc/' + id).success(function(response){
+          $scope.resource = response;
+        });
+      };
+      
+      $scope.update = function() {
+        $http.post('/updatersc/' + $scope.resource._id, $scope.resource).success(function(response){
+          refresh();
+          $scope.resource.name='';
+          $scope.resource.email='';
+          $scope.edit = true;
+          $scope.updateshow = false;
+        });
+      };
+
+      $scope.removeRsc = function(id){
+        $http.get('/deletersc/' + id).success(function(response){
+          refresh();
+          $scope.resource.name='';
+          $scope.resource.email='';
+          $scope.edit = true;
+          $scope.updateshow = false;
+        });
+      };  
+      
+      $scope.addRow = function(){ 
+        var rsc = {
+          projectid: id,
+          tenantid: $scope.tenantid,
+          name : $scope.resource.name,
+          email:$scope.resource.email
+          };
+          $scope.resources.push(rsc);
+          $http.post('/saversc', $scope.resources).success(function(response){
+          refresh();
+          $scope.resource.name='';
+          $scope.resource.email='';
+          $scope.edit = true;
+          $scope.updateshow = false;
+          $scope.resources = [];
+          });
+      };
+
+      $scope.cancel = function(){ 
+          $scope.resource.name='';
+          $scope.resource.email='';
+          $scope.edit = true;
+          $scope.updateshow = false;
+      };
+      
+      $scope.saveProject = function() {
+        if($scope.projectname == "Untitled"){
+          alert('Project name cannot be untitled');
+        }
+        else{
+          alert('Project Saved Successfully!!!');
+        }
+      };
+      
+      $scope.getStatus = function() {
+       $http.get("/getSumOfPlanned")
+        .success(function(response){
+          //alert(response[0].total);
+  		    if(response[0].total > 0){
+  		      //alert(response[0].total + "plannedHours")
+  		      var totalPlanned = response[0].total;
+  		       $http.get("/getSumOfActual")
+             .success(function(response){
+  		        if(response[0].total > 0){
+  		           //alert(response[0].total + "actualHours")
+  		        var totalActual = response[0].total;
+  		         var percentagecomplete = Math.round((totalActual/totalPlanned)*100);
+  		        //alert(percentagecomplete + "complete");
+  		        $scope.percentage = "Project Completion is "+percentagecomplete + "%";
+  		        }
+  		        else{
+  		          $scope.percentage = "Project Completion is "+0 + "%";
+  		        }
+      			}).error(function(error){
+      				alert(error);
+      			});
+  		    }
+  		    else{
+  		      $scope.percentage = "Project Completion is "+0 + "%";
+  		    }
+  			}).error(function(error){
+  				alert(error);
+  			});
+      };
+      
+       $scope.clearProject = function(){
+            $http.get("/getProjectDetails")
+            .success(function(response){
+      		  $scope.projectname =response[0].projectname;
+           $scope.startDateProject= new Date(response[0].projectstart);
+          if (response[0].projectend == null){
+                        $scope.endDateProject=response[0].projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response[0].projectend);}
+      			}).error(function(error){
+      				alert(error);
+  			});
+       };
+       
+       var saveProjectdetail = function(){
+         $scope.projectname = "Untitled";
+         $scope.startDateProject = new Date();
+         $scope.endDateProject = "";
+                $http({
+                method: 'POST',
+                url: '/saveProject',
+                data:{
+                  "projectid": id,
+                  "tenantid":$scope.tenantid,
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     //$('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+      };
+      
+       var getProjectDetails = function(){
+        $http.get("/getProjectDetails")
+        .success(function(response){
+          if(response.length > 0){
+           if(response[0].projectid == 1){
+               $scope.projectname =response[0].projectname;
+            $scope.startDateProject=new Date( response[0].projectstart);
+            if (response[0].projectend == null){
+                        $scope.endDateProject=response[0].projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response[0].projectend);}
+           }
+           else{
+              saveProjectdetail();
+           }
+          }
+          else{
+            saveProjectdetail();
+          }
+  			}).error(function(error){
+  				alert(error);
+  			});
+      };
+      
+      getProjectDetails(); 
+      
+      var updateProjectDetails = function(){
+         $scope.projectname = "Untitled";
+         $scope.startDateProject = new Date();
+         $scope.endDateProject = "";
+                $http({
+                method: 'POST',
+                 url: '/updateProjectDetails/' +$scope.tenantid,
+                data:{
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     //$('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+      };
+      
+      $scope.updateproject  = function(){
+         var start=new Date ($scope.startDateProject);
+        var end=new Date ($scope.endDateProject);
+         var today = new Date();
+        if (start - today < 0){
+          alert('Start date should be future date');
+        }
+        else if (start - end > 0){
+          alert('Finish date cannot be less than start date');
+        }
+        else{
+        $http({
+                method: 'POST',
+                url: '/updateProjectDetails/' +$scope.tenantid,
+                data:{
+                "projectname": $scope.projectname,
+                "projectstart": $scope.startDateProject,
+                "projectend": $scope.endDateProject
+                }
+                }).success(function(response){
+                     $scope.projectname =response.projectname;
+                     $scope.startDateProject= new Date(response.projectstart);
+                     if (response.projectend == null){
+                        $scope.endDateProject=response.projectend;
+                     }
+                     else{
+                     $scope.endDateProject= new Date(response.projectend);}
+                     $('#project').modal('hide');
+                  }).error(function(error){
+                    alert(error);
+                  });
+        }
+        
+
+      };
+      
+      
+    });
+  </script>
+  </body>
+</html>
